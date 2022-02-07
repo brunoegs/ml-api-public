@@ -1,5 +1,3 @@
-
-from ensurepip import bootstrap
 import settings
 import kafka
 import redis

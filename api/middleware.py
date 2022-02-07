@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-from urllib import response
 import settings
 import serializers
 from uuid import uuid4

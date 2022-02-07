@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from urllib import response
 import serializers
 from classifier import SentimentClassifier
 
