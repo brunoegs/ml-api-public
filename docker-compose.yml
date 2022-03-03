@@ -1,5 +1,6 @@
 version: "3.2"
 services:
+
   traefik:
     image: "traefik:v2.0.0-rc3"
     container_name: "traefik"
@@ -17,6 +18,7 @@ services:
 
   api:
     image: flask_api
+    container_name: "api"
     depends_on:
       - kafka
     build:
@@ -35,24 +37,26 @@ services:
       - "traefik.http.services.api.loadbalancer.server.port=80"
       - "traefik.http.routers.api.rule=Host(`localhost`)"
       - "traefik.http.routers.api.entrypoints=web"
-
-    # logging:
-    #   driver: "gelf"
-    #   options:
-    #     gelf-address: "udp://localhost:12201"
-    #     tag: "api-logs"
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://localhost:12201"
+        tag: "api-logs"
 
   redis:
     image: redis:5.0.6
+    container_name: "redis"
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
+    container_name: "zookeeper"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
     image: confluentinc/cp-kafka:latest
+    container_name: "kafka"
     depends_on:
       - zookeeper
     environment:
@@ -65,6 +69,7 @@ services:
 
   model:
     image: ml_service
+    container_name: "model"
     depends_on:
       - kafka
     build:
@@ -73,3 +78,8 @@ services:
     command: "python3 /src/ml_service.py"
     depends_on:
       - redis
+
+networks:
+  default:
+    external:
+      name: red
