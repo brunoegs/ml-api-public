@@ -8,8 +8,16 @@ class QuickstartUser(HttpUser):
         self.client.get('/')
 
     @task(3)
-    def predict(self):
+    def predict_neutral(self):
+        self.client.post('/predict', params={'text': 'guerra'})
+
+    @task(1)
+    def predict_negative(self):
         self.client.post('/predict', params={'text': 'dolar'})
+
+    @task(1)
+    def predict_positive(self):
+        self.client.post('/predict', params={'text': 'dolar mep'})
 
     def on_start(self):
         pass
